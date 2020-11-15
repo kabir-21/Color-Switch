@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.prism.Graphics;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -10,11 +11,12 @@ public class Ball{
     private final double positionX = 205;
     final double BOUNCE = -0.85;
     double y_speed = 0;
+    private double velocity;
     private Color c;
 //    private int count;
 //    private int velocity;
     //physical constants
-    final double GRAVITY = 0.000000001;
+    final double GRAVITY = 0.1;
 
 
     public Ball(int radius, Color c){
@@ -48,7 +50,8 @@ public class Ball{
 //    }
 
     public void move(){
-
+        velocity+= GRAVITY;
+        this.setPosition(velocity);
     }
 }
 

@@ -26,5 +26,4 @@ public class WildCard {
     public Circle getBall(){
         return ball;
     }
-
 }
