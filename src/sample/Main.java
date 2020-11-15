@@ -28,14 +28,27 @@ public class Main extends Application{
         Pane p = new Pane();
         Scene s = new Scene(p,420,780, Color.WHITE);
 //        Circle ball = new Circle(10, Color.RED);
-//        ball.relocate(205,750);
-        Ball b = new Ball(10, Color.RED);
-        p.getChildren().add(b.getBall());
+////        ball.relocate(205,750);
+//        Ball b = new Ball(10, Color.RED);
+        Circle b=new Circle(205,300,10);
+        b.setFill(Color.RED);
+        p.getChildren().add(b);
+
+        AnimationTimer timer = new AnimationTimer() {
+
+            @Override
+            public void handle(long l) {
+                b.setCenterY(b.getCenterY() - 15.5);
+            }
+        };
+
         EventHandler<Event> eventHandler = new EventHandler<Event>() {
             AnimationTimer timer2;
+
             @Override
             public void handle(Event event) {
-                if(event.getEventType() == MouseEvent.MOUSE_CLICKED){
+
+                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
                     timer2 = new AnimationTimer() {
                         @Override
                         public void handle(long l) {
@@ -43,43 +56,37 @@ public class Main extends Application{
                         }
 
                         private void mouseHandle() {
-                            b.setPosition(b.GRAVITY);
+                            b.setCenterY(b.getCenterY() + 3);
                         }
                     };
                     timer2.start();
                 }
-                if(event.getEventType() == KeyEvent.KEY_PRESSED){
-                    timer2.stop();
-                    AnimationTimer timer = new AnimationTimer() {
-                        private long lastUpdate = 0;
-                        @Override
-                        public void handle(long l) {
-                            if(l-lastUpdate>= 28_000_000){
-                                lastUpdate = l;
-                            }
-//                            long elapsed = l-lastUpd/sed/1_000_000_000.0;
-                            keyHandle();
-//                            lastUpdate = l;
-                        }
-                        private void keyHandle() {
-                            b.setPosition(-100);
-                            stop();
-                        }
-                    };
+
+                if (event.getEventType() == KeyEvent.KEY_TYPED) {
                     timer.start();
-                    timer2.start();
+//                        private void keyHandle() {
+//                            b.setPosition(-100);
+//                            stop();
+//                        }
+//                    };
+//                    timer.start();
+//                    timer2.start();
+//                }
                 }
 //                if(keyEvent.getCode().equals(KeyCode.UP)){
-//
-//                }
-            }
+                    if(event.getEventType()==KeyEvent.KEY_RELEASED){
+                        timer.stop();
+                    }
+                }
 
 
-        };
+            };
+
 //        WildCard wild = new WildCard(15, Color.BLACK);
 //        p.getChildren().add(wild.getBall());c
         s.setOnMouseClicked(eventHandler);
-        s.setOnKeyPressed(eventHandler);
+        s.setOnKeyTyped(eventHandler);
+        s.setOnKeyReleased(eventHandler);
 //        Timeline timeline = new Timeline(new KeyFrame(Duration.INDEFINITE));
 //        s.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //            @Override
