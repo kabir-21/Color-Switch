@@ -16,7 +16,7 @@ public class Ball{
 //    private int count;
 //    private int velocity;
     //physical constants
-    final double GRAVITY = 0.1;
+    final double GRAVITY = -0.1;
 
 
     public Ball(int radius, Color c){
@@ -27,7 +27,7 @@ public class Ball{
     }
 
     public void setPosition(double y) {
-        this.ball.relocate(this.positionX, this.ball.getLayoutY()+y);
+        this.ball.relocate(this.positionX, y);
     }
 
     public Point2D getPosition() {
