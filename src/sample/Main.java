@@ -20,7 +20,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -30,7 +32,10 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 
+
 public class Main extends Application{
+
+    static Color colorsArr[] = {Color.RED, Color.YELLOW, Color.VIOLET, Color.BLUE};
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -57,6 +62,8 @@ public class Main extends Application{
         Group gName = new Group(imageView);
         TextField enterName = new TextField("Enter your name");
         enterName.setAlignment(Pos.CENTER);
+
+//        gName.getChildren().add(r);
         gName.getChildren().add(enterName);
         gName.getChildren().add(devText);
         gName.getChildren().add(devKabir);
@@ -75,12 +82,37 @@ public class Main extends Application{
             newGame.setOnAction(actionEvent1 ->{
                 Pane p = new Pane();
                 Ball b = new Ball(10, Color.RED);
+                Rectangle r = new Rectangle();
+                r.setHeight(17);
+                r.setWidth(150);
+                r.setY(20);
+//                r.setX(100);
+                r.setFill(Color.RED);
+                Rectangle r2 = new Rectangle();
+                r2.setHeight(17);
+                r2.setWidth(150);
+                r2.setY(20);
+                r2.setX(150);
+                r2.setFill(Color.VIOLET);
+                Rectangle r3 = new Rectangle();
+                r3.setHeight(17);
+                r3.setWidth(150);
+                r3.setY(20);
+                r3.setX(300);
+                r3.setFill(Color.BLUE);
+//                Circle wild = new Circle(10,Color.DARKGREEN);
+//                wild.relocate(205,600);
                 p.getChildren().add(b.getBall());
+//                p.getChildren().add(wild);
+                p.getChildren().add(r);
+                p.getChildren().add(r2);
+                p.getChildren().add(r3);
+
                 AnimationTimer timer = new AnimationTimer() {
 
                     @Override
                     public void handle(long l) {
-                        b.getBall().setCenterY(b.getBall().getCenterY() - 15.5);
+                        b.getBall().setCenterY(b.getBall().getCenterY() - 28);
                     }
                 };
 
@@ -114,7 +146,9 @@ public class Main extends Application{
 
 
                 };
-                s[3] = new Scene(p,420,780, Color.BLUE);
+                Group game = new Group();
+                game.getChildren().add(p);
+                s[3] = new Scene(game,420,780, Color.BLACK);
                 s[3].setOnMouseClicked(eventHandler);
                 s[3].setOnKeyTyped(eventHandler);
                 s[3].setOnKeyReleased(eventHandler);
@@ -137,6 +171,8 @@ public class Main extends Application{
             insideStart.getChildren().add(exitButton);
             insideStart.getChildren().add(newGame); insideStart.getChildren().add(loadGame);
             s[2] = new Scene(insideStart,420,780, Color.BLACK);
+            s[2].getStylesheets().add("https://fonts.googleapis.com/css2?family=Concert+One");
+            insideStart.setStyle("-fx-font-family: 'Concert One', cursive; -fx-font-size: 15");
             primaryStage.setScene(s[2]);
         });
         s[0] = new Scene(gName, 420, 780, Color.BLACK);

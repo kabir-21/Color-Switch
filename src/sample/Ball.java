@@ -13,9 +13,6 @@ public class Ball{
     double y_speed = 0;
     private double velocity;
     private Color c;
-//    private int count;
-//    private int velocity;
-    //physical constants
     final double GRAVITY = -0.1;
 
 
@@ -23,7 +20,7 @@ public class Ball{
         this.radius = radius;
         this.c = c;
         this.ball = new Circle(this.radius, this.c);
-        this.ball.relocate(this.positionX, 300);
+        this.ball.relocate(this.positionX, 700);
     }
 
     public void setPosition(double y) {
