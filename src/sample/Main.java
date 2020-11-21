@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -31,9 +32,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-
+import java.util.List;
 
 public class Main extends Application{
+    static Ball b;
+    public static int HEIGHT = 780;
+    public static int WIDTH = 420;
+    public static double MID = 370;
+    public static AnimationTimer floortimer;
 
     static Color colorsArr[] = {Color.RED, Color.YELLOW, Color.VIOLET, Color.BLUE};
 
@@ -62,8 +68,6 @@ public class Main extends Application{
         Group gName = new Group(imageView);
         TextField enterName = new TextField("Enter your name");
         enterName.setAlignment(Pos.CENTER);
-
-//        gName.getChildren().add(r);
         gName.getChildren().add(enterName);
         gName.getChildren().add(devText);
         gName.getChildren().add(devKabir);
@@ -81,12 +85,12 @@ public class Main extends Application{
             newGame.setLayoutY(400);
             newGame.setOnAction(actionEvent1 ->{
                 Pane p = new Pane();
-                Ball b = new Ball(10, Color.RED);
+                b = new Ball(10, Color.RED);
+                Pane p2 = new Pane();
                 Rectangle r = new Rectangle();
                 r.setHeight(17);
                 r.setWidth(150);
                 r.setY(20);
-//                r.setX(100);
                 r.setFill(Color.RED);
                 Rectangle r2 = new Rectangle();
                 r2.setHeight(17);
@@ -100,29 +104,50 @@ public class Main extends Application{
                 r3.setY(20);
                 r3.setX(300);
                 r3.setFill(Color.BLUE);
-//                Circle wild = new Circle(10,Color.DARKGREEN);
-//                wild.relocate(205,600);
+                Rectangle r4 = new Rectangle();
+                r4.setHeight(17);
+                r4.setWidth(150);
+                r4.setY(20);
+                r4.setX(450);
+                r4.setFill(Color.YELLOW);
+                p2.getChildren().addAll(r,r2,r3,r4);
                 p.getChildren().add(b.getBall());
-//                p.getChildren().add(wild);
-                p.getChildren().add(r);
-                p.getChildren().add(r2);
-                p.getChildren().add(r3);
 
                 AnimationTimer timer = new AnimationTimer() {
-
                     @Override
                     public void handle(long l) {
-                        b.getBall().setCenterY(b.getBall().getCenterY() - 28);
+                        b.getBall().setCenterY(b.getBall().getCenterY() - 14.5);
+//                        double temp = MID-b.getBall().getCenterY();
+//                        if(temp<0)
+//                            moveFloor(r,r2,r3,r4, temp);
                     }
                 };
 
                 EventHandler<Event> eventHandler = new EventHandler<Event>() {
+
                     AnimationTimer timer2;
 
                     @Override
                     public void handle(Event event) {
-
                         if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                            AnimationTimer rect1 = new AnimationTimer() {
+                                @Override
+                                public void handle(long l) {
+                                    if(r.getX() == -150)
+                                        r.setX(r4.getX()+150);
+                                    r.setX(r.getX()-3);
+                                    if(r2.getX() == -150)
+                                        r2.setX(r.getX()+150);
+                                    r2.setX(r2.getX()-3);
+                                    if(r3.getX() == -150)
+                                        r3.setX(r2.getX()+150);
+                                    r3.setX(r3.getX()-3);
+                                    if(r4.getX() == -150)
+                                        r4.setX(r3.getX()+150);
+                                    r4.setX(r4.getX()-3);
+                                }
+                            };
+                            rect1.start();
                             timer2 = new AnimationTimer() {
                                 @Override
                                 public void handle(long l) {
@@ -130,7 +155,7 @@ public class Main extends Application{
                                 }
 
                                 private void mouseHandle() {
-                                    b.getBall().setCenterY(b.getBall().getCenterY() + 5);
+                                    b.getBall().setCenterY(b.getBall().getCenterY() + 2.5);
                                 }
                             };
                             timer2.start();
@@ -143,11 +168,10 @@ public class Main extends Application{
                             timer.stop();
                         }
                     }
-
-
                 };
                 Group game = new Group();
                 game.getChildren().add(p);
+                game.getChildren().add(p2);
                 s[3] = new Scene(game,420,780, Color.BLACK);
                 s[3].setOnMouseClicked(eventHandler);
                 s[3].setOnKeyTyped(eventHandler);
@@ -175,13 +199,31 @@ public class Main extends Application{
             insideStart.setStyle("-fx-font-family: 'Concert One', cursive; -fx-font-size: 15");
             primaryStage.setScene(s[2]);
         });
-        s[0] = new Scene(gName, 420, 780, Color.BLACK);
+        s[0] = new Scene(gName, WIDTH, HEIGHT, Color.BLACK);
         s[0].getStylesheets().add("https://fonts.googleapis.com/css2?family=Concert+One");
         gName.setStyle("-fx-font-family: 'Concert One', cursive; -fx-font-size: 15");
         primaryStage.setScene(s[0]);
         primaryStage.show();
     }
 
+//    public static void moveFloor(Rectangle r, Rectangle r2, Rectangle r3, Rectangle r4, double len){
+//        floortimer = new AnimationTimer(){
+//            @Override
+//            public void handle(long l) {
+//                r.setY(r.getY()+len);
+//                r2.setY(r2.getY()+len);
+//                r3.setY(r3.getY()+len);
+//                r4.setY(r4.getY()+len);
+//
+//                //                    List<Node> list = p.getChildren();
+////                    floortimer.stop();
+//            }
+//        };
+////        if(b.getBall().getCenterY()<=-325){
+//            floortimer.start();
+////            floortimer.stop();
+////        }
+//    }
     public static void main(String[] args) {
         launch(args);
     }
