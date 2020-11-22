@@ -1,36 +1,21 @@
 package sample;
 
-import com.sun.prism.Graphics;
-import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
 
 public class Ball{
-    private Circle ball;
-    private final double radius;
-    private final double positionX = 205;
-    final double BOUNCE = -0.85;
-    double y_speed = 0;
-    private double velocity;
+    private final Circle ball;
     private Color c;
-    final double GRAVITY = -0.1;
-
 
     public Ball(int radius, Color c){
-        this.radius = radius;
         this.c = c;
-        this.ball = new Circle(this.radius, this.c);
-        this.ball.relocate(this.positionX, 700);
+        this.ball = new Circle(radius, this.c);
+        double positionX = 205;
+        this.ball.relocate(positionX, 700);
     }
-
-    public void setPosition(double y) {
-        this.ball.relocate(this.positionX, y);
-    }
-
-    public Point2D getPosition() {
-        return new Point2D(ball.getCenterX(), ball.getCenterY());
-    }
-
     public void disappear() {
 
     }
@@ -38,17 +23,25 @@ public class Ball{
         return ball;
     }
 
-//    public int getVelocity() {
-//        return velocity;
-//    }
-//
-//    public void setVelocity(int velocity) {
-//        this.velocity = velocity;
-//    }
+    public void gravity() {
+        this.getBall().setCenterY(this.getBall().getCenterY() + 2.5);
+    }
 
-    public void move(){
-        velocity+= GRAVITY;
-        this.setPosition(velocity);
+    public void checkCollision(ArrayList<Rectangle> line1Rects) {
+        for(int i=0; i<line1Rects.size(); i++){
+            if(line1Rects.get(i).getBoundsInParent().intersects(this.getBall().getBoundsInParent())){
+                if(!line1Rects.get(i).getFill().equals(this.getBall().getFill())){
+                    Main.timer.stop(); Main.timer2.stop(); Main.rect1.stop(); //Main.cross_timer.stop();
+                }
+            }
+        }
+//        for(int i=0; i<crossArr.size(); i++){
+//            if(crossArr.get(i).getBoundsInParent().intersects(this.getBall().getBoundsInParent())){
+//                if(!crossArr.get(i).getFill().equals(this.getBall().getFill())){
+//                    Main.timer.stop(); Main.timer2.stop(); Main.rect1.stop(); //Main.cross_timer.stop();
+//                }
+//            }
+//        }
     }
 }
 
