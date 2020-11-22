@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
@@ -75,8 +76,8 @@ public class Line extends Obstacles{
 
     @Override
     public void moveDown(double temp) {
-        for(int i=0;i<line.size();i++){
-            line.get(i).setY(line.get(i).getY()-temp);
+        for (Rectangle rectangle : line) {
+            rectangle.setY(rectangle.getY() - temp/10);
         }
     }
 

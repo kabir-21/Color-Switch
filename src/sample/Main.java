@@ -14,11 +14,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.awt.*;
+import java.awt.image.AreaAveragingScaleFilter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -32,7 +40,8 @@ public class Main extends Application{
     public static AnimationTimer timer;
     public static AnimationTimer timer2;
     public static AnimationTimer rect1;
-//    public static AnimationTimer cross_timer;
+    public static AnimationTimer cross_timer;
+    public static Stage pStage;
 
     protected static Image image;
     static {
@@ -58,6 +67,7 @@ public class Main extends Application{
     }
 
     public void startGame(Stage primaryStage){
+        pStage = primaryStage;
         Text devText = new Text("Developed By:");
         Text devKabir = new Text("KABIR [2019365]");
         Text devSejal = new Text("SEJAL [2019102]");
@@ -75,6 +85,8 @@ public class Main extends Application{
         imageView.setFitHeight(200);
         Group gName = new Group(imageView);
         TextField enterName = new TextField("Enter your name");
+        enterName.setStyle("-fx-text-fill: white");
+        enterName.setBackground(Background.EMPTY);
         enterName.setAlignment(Pos.CENTER);
         gName.getChildren().add(enterName);
         gName.getChildren().add(devText);
@@ -99,6 +111,8 @@ public class Main extends Application{
         newGame.setPrefWidth(90);
         newGame.setLayoutX(175);
         newGame.setLayoutY(400);
+        newGame.setStyle("-fx-text-fill: white");
+        newGame.setBackground(Background.EMPTY);
         newGame.setOnAction(actionEvent1 -> insideNewGame(primaryStage));
 
         Button loadGame = new Button("Load Game");
@@ -106,12 +120,19 @@ public class Main extends Application{
         loadGame.setPrefWidth(90);
         loadGame.setLayoutX(175);
         loadGame.setLayoutY(440);
+        loadGame.setStyle("-fx-text-fill: white");
+        loadGame.setBackground(Background.EMPTY);
+
+        FileChooser fileChooser = new FileChooser();
+        loadGame.setOnAction(actionEvent -> insideLoadGame(fileChooser, loadGame, primaryStage));
 
         Button exitButton = new Button("Exit");
         exitButton.setPrefHeight(10);
         exitButton.setPrefWidth(90);
         exitButton.setLayoutX(175);
         exitButton.setLayoutY(480);
+        exitButton.setStyle("-fx-text-fill: white");
+        exitButton.setBackground(Background.EMPTY);
         exitButton.setOnAction(actionEvent1 -> primaryStage.close());
 
         insideStart.getChildren().add(exitButton);
@@ -124,29 +145,56 @@ public class Main extends Application{
 
     public void insideNewGame(Stage primaryStage) {
         Pane p = new Pane();
+//        Image pauseImage = new Image("C:\\Users\\kabni\\Downloads\\pause.png");
+//        ImageView pauseImageView = new ImageView(pauseImage);
+//        pauseImageView.setFitHeight(30);
+//        pauseImageView.setPreserveRatio(true);
+        Button pauseButton = new Button("| |");
+        pauseButton.setStyle("-fx-font-weight: bold");
+        pauseButton.setStyle("-fx-text-fill: white");
+        pauseButton.setBackground(Background.EMPTY);
+        pauseButton.setLayoutX(390);
+        pauseButton.setLayoutY(750);
+        pauseButton.setPrefSize(30,30);
+        pauseButton.setDefaultButton(false);
+        pauseButton.setOnAction(actionEvent -> {
+            pauseGame(primaryStage);
+        });
         b = new Ball(10, Color.RED);
         Pane p2 = new Pane();
+        Pane p3 = new Pane();
+        Pane p4 = new Pane();
+        Pane p5 = new Pane();
         Pane squarePane = new Pane();
         Line line1 = new Line(20);
-//        Cross cross = new Cross(90,370, Color.RED, Color.BLUE);
-//        ArrayList<Rectangle> crossArr = cross.getCross();
+        Cross cross = new Cross(90,300, Color.RED, Color.BLUE);
+        Rhombus rhombus = new Rhombus(160,-350);
+        Square square = new Square();
+        ArrayList<Rectangle> sqaureArr = square.getSquare();
+        ArrayList<Rectangle> crossArr = cross.getCross();
         ArrayList<Rectangle> line1Rects = line1.getLine();
         p2.getChildren().addAll(line1.getLine()); //p2.getChildren().addAll(cross.getCross());
+        p3.getChildren().addAll(cross.getCross());
+        p4.getChildren().addAll(rhombus.getRhombus());
+        p5.getChildren().addAll(square.getSquare());
         p.getChildren().add(b.getBall());
 
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 b.getBall().setCenterY(b.getBall().getCenterY() - 14.5);
-                b.checkCollision(line1Rects);//, crossArr);
+                b.checkCollision(line1Rects, cross);//, crossArr);
                 double temp = MID+b.getBall().getCenterY();
-                if(temp<0)
+                if(temp<0){
                     line1.moveDown(temp);
+                    cross.moveDown(temp);
+                    rhombus.moveDown(temp);
+                    square.moveDown(temp);
+                }
             }
         };
 
         EventHandler<Event> eventHandler = new EventHandler<Event>() {
-
 
             @Override
             public void handle(Event event) {
@@ -165,23 +213,74 @@ public class Main extends Application{
                         }
                     };
                     timer2.start();
-//                    cross_timer=new AnimationTimer() {
-//                        @Override
-//                        public void handle(long l) {
-//                            cross.move();
-//                        }
-//                    };
-//                    cross_timer.start();
+                    cross_timer=new AnimationTimer() {
+                        @Override
+                        public void handle(long l) {
+                            cross.move();
+                        }
+                    };
+                    cross_timer.start();
                 }
             }
         };
         Group game = new Group();
         game.getChildren().add(p);
         game.getChildren().add(p2);
+        game.getChildren().add(p3);
+        game.getChildren().add(p4);
+        game.getChildren().add(p5);
+        game.getChildren().add(pauseButton);
         s[3] = new Scene(game,420,780, Color.BLACK);
         s[3].setOnMouseClicked(eventHandler);
         s[3].setOnKeyPressed(keyEvent -> timer.start());
         s[3].setOnKeyReleased(keyEvent -> timer.stop());
         primaryStage.setScene(s[3]);
+    }
+
+    public void pauseGame(Stage primaryStage) {
+        ImageView imageView = new ImageView(image);
+        imageView.setX(8);
+        imageView.setY(100);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(200);
+        Group pauseMenu = new Group(imageView);
+
+        Button saveButton = new Button("Save Game");
+        saveButton.setPrefHeight(10);
+        saveButton.setPrefWidth(90);
+        saveButton.setLayoutX(175);
+        saveButton.setLayoutY(400);
+        saveButton.setStyle("-fx-text-fill: white");
+//        saveButton.setOnAction(actionEvent1 -> primaryStage.close());
+        saveButton.setBackground(Background.EMPTY);
+
+        Button exitButton = new Button("Exit");
+        exitButton.setPrefHeight(10);
+        exitButton.setPrefWidth(90);
+        exitButton.setLayoutX(175);
+        exitButton.setLayoutY(440);
+        exitButton.setOnAction(actionEvent1 -> primaryStage.close());
+        exitButton.setStyle("-fx-text-fill: white");
+        exitButton.setBackground(Background.EMPTY);
+
+        pauseMenu.getChildren().add(saveButton);
+        pauseMenu.getChildren().add(exitButton);
+        s[4] = new Scene(pauseMenu, 420, 780, Color.BLACK);
+        s[4].getStylesheets().add("https://fonts.googleapis.com/css2?family=Concert+One");
+        pauseMenu.setStyle("-fx-font-family: 'Concert One', cursive; -fx-font-size: 15");
+        primaryStage.setScene(s[4]);
+    }
+
+    public void insideLoadGame(FileChooser fileChooser, Button loadGame, Stage primaryStage) {
+        loadGame.setOnAction(e -> {
+            File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        });
+    }
+
+    public static void gameOver() {
+        timer.stop();
+        timer2.stop();
+        rect1.stop();
+        cross_timer.stop();
     }
 }

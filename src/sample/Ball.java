@@ -25,23 +25,37 @@ public class Ball{
 
     public void gravity() {
         this.getBall().setCenterY(this.getBall().getCenterY() + 2.5);
+
     }
 
-    public void checkCollision(ArrayList<Rectangle> line1Rects) {
-        for(int i=0; i<line1Rects.size(); i++){
-            if(line1Rects.get(i).getBoundsInParent().intersects(this.getBall().getBoundsInParent())){
-                if(!line1Rects.get(i).getFill().equals(this.getBall().getFill())){
-                    Main.timer.stop(); Main.timer2.stop(); Main.rect1.stop(); //Main.cross_timer.stop();
+    public void checkCollision(ArrayList<Rectangle> line1Rects, Cross cross) {
+        for (Rectangle line1Rect : line1Rects) {
+            if (line1Rect.getBoundsInParent().intersects(this.getBall().getBoundsInParent())) {
+                if (!line1Rect.getFill().equals(this.getBall().getFill())) {
+                    Main.gameOver();
+//                    cross.r1.stop();
+//                    cross.r2.stop();
+//                    Main.timer.stop();
+//                    Main.timer2.stop();
+//                    Main.rect1.stop();
+//                    Main.cross_timer.stop();
                 }
             }
         }
-//        for(int i=0; i<crossArr.size(); i++){
-//            if(crossArr.get(i).getBoundsInParent().intersects(this.getBall().getBoundsInParent())){
-//                if(!crossArr.get(i).getFill().equals(this.getBall().getFill())){
-//                    Main.timer.stop(); Main.timer2.stop(); Main.rect1.stop(); //Main.cross_timer.stop();
-//                }
-//            }
-//        }
+        ArrayList<Rectangle> crossArr = cross.getCross();
+        for (Rectangle rectangle : crossArr) {
+            if (rectangle.getBoundsInParent().intersects(this.getBall().getBoundsInParent())) {
+                if (!rectangle.getFill().equals(this.getBall().getFill())) {
+                    Main.gameOver();
+//                    cross.r1.stop();
+//                    cross.r2.stop();
+//                    Main.timer.stop();
+//                    Main.timer2.stop();
+//                    Main.rect1.stop();
+//                    Main.cross_timer.stop();
+                }
+            }
+        }
     }
 }
 
