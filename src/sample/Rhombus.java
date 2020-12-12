@@ -2,6 +2,8 @@ package sample;
 
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
@@ -15,6 +17,9 @@ public class Rhombus extends Obstacles{
     private final Rectangle r3;
     private final Rectangle r4;
     private final Group g = new Group();
+    String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+    Image star = new Image(starUrl);
+    private ImageView starView = new ImageView(star);
     private final RotateTransition r = new RotateTransition();
     private final ArrayList<Rectangle> rhombusArr = new ArrayList<>();
     Rhombus(double lenX, double lenY){
@@ -56,6 +61,12 @@ public class Rhombus extends Obstacles{
         r3.setRotate(30);
         r4.setRotate(30);
 
+        starView.setX(((2*lenX)+100)/2);
+        starView.setY((2*lenY+173)/2);
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
+
+
         rhombusArr.add(r1);
         rhombusArr.add(r2);
         rhombusArr.add(r3);
@@ -95,5 +106,12 @@ public class Rhombus extends Obstacles{
         for (Rectangle rectangle : rhombusArr) {
             rectangle.setY(rectangle.getY() - temp);
         }
+    }
+    public ImageView getStarView(){
+        return starView;
+    }
+
+    public void removeStar(){
+        this.starView.setImage(null);
     }
 }

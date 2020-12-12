@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 
+import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 
 public class Circle extends Obstacles {
@@ -21,6 +22,7 @@ public class Circle extends Obstacles {
         arc1.setStartAngle(startAngle);
         arc1.setLength(length);
         arc1.setType(ArcType.OPEN);
+        arc1.setFill(Color.TRANSPARENT);
         arc1.setStroke(Color.BLUE);
         arc1.setStrokeWidth(width);
 
@@ -32,6 +34,7 @@ public class Circle extends Obstacles {
         arc2.setStartAngle(startAngle+90.0f);
         arc2.setLength(length);
         arc2.setType(ArcType.OPEN);
+        arc2.setFill(Color.TRANSPARENT);
         arc2.setStroke(Color.YELLOW);
         arc2.setStrokeWidth(width);
 
@@ -43,6 +46,7 @@ public class Circle extends Obstacles {
         arc3.setStartAngle(startAngle+180.0f);
         arc3.setLength(length);
         arc3.setType(ArcType.OPEN);
+        arc3.setFill(Color.TRANSPARENT);
         arc3.setStroke(Color.VIOLET);
         arc3.setStrokeWidth(width);
 
@@ -54,6 +58,7 @@ public class Circle extends Obstacles {
         arc4.setStartAngle(startAngle+270.0f);
         arc4.setLength(length);
         arc4.setType(ArcType.OPEN);
+        arc4.setFill(Color.TRANSPARENT);
         arc4.setStroke(Color.RED);
         arc4.setStrokeWidth(width);
 
@@ -65,10 +70,10 @@ public class Circle extends Obstacles {
 
     @Override
     public void move() {
-        this.arc1.setStartAngle(this.arc1.getStartAngle()+1);
-        this.arc2.setStartAngle(this.arc2.getStartAngle()+1);
-        this.arc3.setStartAngle(this.arc3.getStartAngle()+1);
-        this.arc4.setStartAngle(this.arc4.getStartAngle()+1);
+        this.arc1.setStartAngle(this.arc1.getStartAngle()+2);
+        this.arc2.setStartAngle(this.arc2.getStartAngle()+2);
+        this.arc3.setStartAngle(this.arc3.getStartAngle()+2);
+        this.arc4.setStartAngle(this.arc4.getStartAngle()+2);
     }
 
     @Override
@@ -83,7 +88,9 @@ public class Circle extends Obstacles {
 
     @Override
     public void moveDown(double temp) {
-
+        for(Arc arc: circle){
+            arc.setCenterY(arc.getCenterY()-temp);
+        }
     }
 
     public ArrayList<Arc> getCircle(){

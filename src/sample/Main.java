@@ -17,14 +17,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,7 +31,6 @@ public class Main extends Application{
     protected static int HEIGHT = 780;
     protected static int WIDTH = 420;
     protected static double MID = 390;
-    protected static AnimationTimer floortimer; 
     public static AnimationTimer timer;
     public static AnimationTimer timer2;
     public static AnimationTimer rect1;
@@ -42,17 +38,12 @@ public class Main extends Application{
     public static AnimationTimer rhombus_timer;
     public static AnimationTimer circle_timer;
     public static Stage pStage;
+    public static int points = 0;
     public static Color currentColor;
     public static Color colors[] = {Color.RED, Color.VIOLET, Color.BLUE, Color.YELLOW};
 
-    protected static Image image;
-    static {
-        try {
-            image = new Image(new FileInputStream("C:\\Users\\kabni\\Downloads\\switch.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    protected static String logoUrl = "https://www.dafont.com/forum/attach/orig/8/8/885774.png?1";
+    protected static Image image = new Image(logoUrl);
     protected final Scene[] s = new Scene[10];
     protected final Player[] user = new Player[1];
 
@@ -158,7 +149,7 @@ public class Main extends Application{
 //        pauseImageView.setFitHeight(30);
 //        pauseImageView.setPreserveRatio(true);
         Button pauseButton = new Button("| |");
-        TextField score = new TextField("00");
+        TextField score = new TextField(""+points);
         score.setStyle("-fx-text-fill: white");
         score.setBackground(Background.EMPTY);
         score.setLayoutX(0);
@@ -179,7 +170,7 @@ public class Main extends Application{
         });
         b = new Ball(10, colors[new Random().nextInt(colors.length)]);
         Pane arcPane = new Pane();
-        Circle circle = new Circle(210,290, 100, 100, 0,90,12);
+        Circle circle = new Circle(210,-1000, 100, 100, 0,90,12);
         Pane p2 = new Pane();
         Pane p3 = new Pane();
         Pane p4 = new Pane();
@@ -188,12 +179,13 @@ public class Main extends Application{
         Line line1 = new Line(20);
         Cross cross = new Cross(90,300, currentColor, pickRandomColor());
         Rhombus rhombus = new Rhombus(160,-350);
-        Image star = new Image(new FileInputStream("C:\\Users\\kabni\\Downloads\\star.png"));
-        ImageView starView = new ImageView(star);
-        starView.setX(205);
-        starView.setY(-320);
-        starView.setPreserveRatio(true);
-        starView.setFitHeight(20);
+//        String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+//        Image star = new Image(starUrl);
+//        ImageView starView = new ImageView(star);
+//        starView.setX(205);
+//        starView.setY(-320);
+//        starView.setPreserveRatio(true);
+//        starView.setFitHeight(20);
         Square square = new Square();
         ArrayList<Rectangle> sqaureArr = square.getSquare();
         ArrayList<Rectangle> crossArr = cross.getCross();
@@ -209,14 +201,20 @@ public class Main extends Application{
             @Override
             public void handle(long l) {
                 b.getBall().setCenterY(b.getBall().getCenterY() - 12);
+                if(rhombus.getStarView().getBoundsInParent().intersects(b.getBall().getBoundsInParent())){
+                    rhombus.removeStar();
+                    points++;
+                }
 //                b.checkCollision(line1Rects, cross);//, crossArr);
                 double temp = MID+b.getBall().getCenterY();
                 if(temp<0){
 //                    b.getBall().setCenterY(b.getBall().getCenterY() + temp/2);
-                    line1.moveDown(temp);
-                    cross.moveDown(temp);
-                    rhombus.moveDown(temp);
-                    square.moveDown(temp);
+                    line1.moveDown(-8);
+                    cross.moveDown(-8);
+                    rhombus.moveDown(-8);
+                    square.moveDown(-8);
+                    circle.moveDown(-8);
+                    rhombus.getStarView().setY(rhombus.getStarView().getY()-temp);
                 }
             }
         };
@@ -265,6 +263,7 @@ public class Main extends Application{
             }
         };
         Group game = new Group();
+        game.getChildren().add(rhombus.getStarView());
         game.getChildren().add(p);
         game.getChildren().add(p2);
         game.getChildren().add(p3);
@@ -272,7 +271,7 @@ public class Main extends Application{
         game.getChildren().add(p5);
         game.getChildren().add(arcPane);
         game.getChildren().add(pauseButton);
-        game.getChildren().add(starView);
+//        game.getChildren().add(starView);
         game.getChildren().add(score);
         s[3] = new Scene(game,420,780, Color.BLACK);
         s[3].setOnMouseClicked(eventHandler);
