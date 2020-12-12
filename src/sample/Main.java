@@ -17,6 +17,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -38,6 +40,7 @@ public class Main extends Application{
     public static AnimationTimer rect1;
     public static AnimationTimer cross_timer;
     public static AnimationTimer rhombus_timer;
+    public static AnimationTimer circle_timer;
     public static Stage pStage;
     public static Color currentColor;
     public static Color colors[] = {Color.RED, Color.VIOLET, Color.BLUE, Color.YELLOW};
@@ -175,6 +178,8 @@ public class Main extends Application{
             cross_timer.stop();
         });
         b = new Ball(10, colors[new Random().nextInt(colors.length)]);
+        Pane arcPane = new Pane();
+        Circle circle = new Circle(210,290, 100, 100, 0,90,12);
         Pane p2 = new Pane();
         Pane p3 = new Pane();
         Pane p4 = new Pane();
@@ -193,6 +198,7 @@ public class Main extends Application{
         ArrayList<Rectangle> sqaureArr = square.getSquare();
         ArrayList<Rectangle> crossArr = cross.getCross();
         ArrayList<Rectangle> line1Rects = line1.getLine();
+        arcPane.getChildren().addAll(circle.getCircle());
         p2.getChildren().addAll(line1.getLine()); //p2.getChildren().addAll(cross.getCross());
         p3.getChildren().addAll(cross.getCross());
         p4.getChildren().addAll(rhombus.getRhombus());
@@ -248,6 +254,13 @@ public class Main extends Application{
                         }
                     };
                     rhombus_timer.start();
+                    circle_timer = new AnimationTimer() {
+                        @Override
+                        public void handle(long l) {
+                            circle.move();
+                        }
+                    };
+                    circle_timer.start();
                 }
             }
         };
@@ -257,6 +270,7 @@ public class Main extends Application{
         game.getChildren().add(p3);
         game.getChildren().add(p4);
         game.getChildren().add(p5);
+        game.getChildren().add(arcPane);
         game.getChildren().add(pauseButton);
         game.getChildren().add(starView);
         game.getChildren().add(score);
