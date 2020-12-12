@@ -66,7 +66,7 @@ public class Square extends Obstacles{
     @Override
     public void moveDown(double temp) {
         for (Rectangle rectangle : square) {
-            rectangle.setY(rectangle.getY() - temp / 10);
+            rectangle.setY(rectangle.getY() - temp);
         }
     }
 }

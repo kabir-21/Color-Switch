@@ -15,33 +15,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.awt.*;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Main extends Application{
     protected static Ball b;
     protected static int HEIGHT = 780;
     protected static int WIDTH = 420;
     protected static double MID = 390;
-    protected static AnimationTimer floortimer;
+    protected static AnimationTimer floortimer; 
     public static AnimationTimer timer;
     public static AnimationTimer timer2;
     public static AnimationTimer rect1;
     public static AnimationTimer cross_timer;
+    public static AnimationTimer rhombus_timer;
     public static Stage pStage;
+    public static Color currentColor;
+    public static Color colors[] = {Color.RED, Color.VIOLET, Color.BLUE, Color.YELLOW};
 
     protected static Image image;
     static {
@@ -113,7 +112,13 @@ public class Main extends Application{
         newGame.setLayoutY(400);
         newGame.setStyle("-fx-text-fill: white");
         newGame.setBackground(Background.EMPTY);
-        newGame.setOnAction(actionEvent1 -> insideNewGame(primaryStage));
+        newGame.setOnAction(actionEvent1 -> {
+            try {
+                insideNewGame(primaryStage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
 
         Button loadGame = new Button("Load Game");
         loadGame.setPrefHeight(10);
@@ -143,13 +148,18 @@ public class Main extends Application{
         primaryStage.setScene(s[2]);
     }
 
-    public void insideNewGame(Stage primaryStage) {
+    public void insideNewGame(Stage primaryStage) throws FileNotFoundException {
         Pane p = new Pane();
 //        Image pauseImage = new Image("C:\\Users\\kabni\\Downloads\\pause.png");
 //        ImageView pauseImageView = new ImageView(pauseImage);
 //        pauseImageView.setFitHeight(30);
 //        pauseImageView.setPreserveRatio(true);
         Button pauseButton = new Button("| |");
+        TextField score = new TextField("00");
+        score.setStyle("-fx-text-fill: white");
+        score.setBackground(Background.EMPTY);
+        score.setLayoutX(0);
+        score.setLayoutY(750);
         pauseButton.setStyle("-fx-font-weight: bold");
         pauseButton.setStyle("-fx-text-fill: white");
         pauseButton.setBackground(Background.EMPTY);
@@ -159,16 +169,26 @@ public class Main extends Application{
         pauseButton.setDefaultButton(false);
         pauseButton.setOnAction(actionEvent -> {
             pauseGame(primaryStage);
+            timer.stop();
+            timer2.stop();
+            rect1.stop();
+            cross_timer.stop();
         });
-        b = new Ball(10, Color.RED);
+        b = new Ball(10, colors[new Random().nextInt(colors.length)]);
         Pane p2 = new Pane();
         Pane p3 = new Pane();
         Pane p4 = new Pane();
         Pane p5 = new Pane();
         Pane squarePane = new Pane();
         Line line1 = new Line(20);
-        Cross cross = new Cross(90,300, Color.RED, Color.BLUE);
+        Cross cross = new Cross(90,300, currentColor, pickRandomColor());
         Rhombus rhombus = new Rhombus(160,-350);
+        Image star = new Image(new FileInputStream("C:\\Users\\kabni\\Downloads\\star.png"));
+        ImageView starView = new ImageView(star);
+        starView.setX(205);
+        starView.setY(-320);
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
         Square square = new Square();
         ArrayList<Rectangle> sqaureArr = square.getSquare();
         ArrayList<Rectangle> crossArr = cross.getCross();
@@ -182,10 +202,11 @@ public class Main extends Application{
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                b.getBall().setCenterY(b.getBall().getCenterY() - 14.5);
-                b.checkCollision(line1Rects, cross);//, crossArr);
+                b.getBall().setCenterY(b.getBall().getCenterY() - 12);
+//                b.checkCollision(line1Rects, cross);//, crossArr);
                 double temp = MID+b.getBall().getCenterY();
                 if(temp<0){
+//                    b.getBall().setCenterY(b.getBall().getCenterY() + temp/2);
                     line1.moveDown(temp);
                     cross.moveDown(temp);
                     rhombus.moveDown(temp);
@@ -220,6 +241,13 @@ public class Main extends Application{
                         }
                     };
                     cross_timer.start();
+                    rhombus_timer = new AnimationTimer() {
+                        @Override
+                        public void handle(long l) {
+                            rhombus.move();
+                        }
+                    };
+                    rhombus_timer.start();
                 }
             }
         };
@@ -230,11 +258,23 @@ public class Main extends Application{
         game.getChildren().add(p4);
         game.getChildren().add(p5);
         game.getChildren().add(pauseButton);
+        game.getChildren().add(starView);
+        game.getChildren().add(score);
         s[3] = new Scene(game,420,780, Color.BLACK);
         s[3].setOnMouseClicked(eventHandler);
         s[3].setOnKeyPressed(keyEvent -> timer.start());
         s[3].setOnKeyReleased(keyEvent -> timer.stop());
         primaryStage.setScene(s[3]);
+    }
+
+    public Color pickRandomColor() {
+        Color c;
+        while(true){
+            c = colors[new Random().nextInt(colors.length)];
+            if(c!=currentColor)
+                break;
+        }
+        return c;
     }
 
     public void pauseGame(Stage primaryStage) {
@@ -245,26 +285,47 @@ public class Main extends Application{
         imageView.setFitHeight(200);
         Group pauseMenu = new Group(imageView);
 
+        Button resumeButton = new Button("Resume");
+        resumeButton.setPrefHeight(10);
+        resumeButton.setPrefWidth(90);
+        resumeButton.setLayoutX(175);
+        resumeButton.setLayoutY(400);
+        resumeButton.setStyle("-fx-text-fill: white");
+        resumeButton.setBackground(Background.EMPTY);
+        resumeButton.setOnAction(actionEvent -> {
+            primaryStage.setScene(s[3]);
+        }
+        );
+
         Button saveButton = new Button("Save Game");
         saveButton.setPrefHeight(10);
         saveButton.setPrefWidth(90);
         saveButton.setLayoutX(175);
-        saveButton.setLayoutY(400);
+        saveButton.setLayoutY(440);
         saveButton.setStyle("-fx-text-fill: white");
-//        saveButton.setOnAction(actionEvent1 -> primaryStage.close());
         saveButton.setBackground(Background.EMPTY);
+
+        Button restartButton = new Button("Restart");
+        restartButton.setPrefHeight(10);
+        restartButton.setPrefWidth(90);
+        restartButton.setLayoutX(175);
+        restartButton.setLayoutY(480);
+        restartButton.setStyle("-fx-text-fill: white");
+        restartButton.setBackground(Background.EMPTY);
 
         Button exitButton = new Button("Exit");
         exitButton.setPrefHeight(10);
         exitButton.setPrefWidth(90);
         exitButton.setLayoutX(175);
-        exitButton.setLayoutY(440);
+        exitButton.setLayoutY(520);
         exitButton.setOnAction(actionEvent1 -> primaryStage.close());
         exitButton.setStyle("-fx-text-fill: white");
         exitButton.setBackground(Background.EMPTY);
 
+        pauseMenu.getChildren().add(resumeButton);
         pauseMenu.getChildren().add(saveButton);
         pauseMenu.getChildren().add(exitButton);
+        pauseMenu.getChildren().add(restartButton);
         s[4] = new Scene(pauseMenu, 420, 780, Color.BLACK);
         s[4].getStylesheets().add("https://fonts.googleapis.com/css2?family=Concert+One");
         pauseMenu.setStyle("-fx-font-family: 'Concert One', cursive; -fx-font-size: 15");

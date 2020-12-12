@@ -1,7 +1,11 @@
 package sample;
 
+import javafx.animation.RotateTransition;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -10,6 +14,8 @@ public class Rhombus extends Obstacles{
     private final Rectangle r2;
     private final Rectangle r3;
     private final Rectangle r4;
+    private final Group g = new Group();
+    private final RotateTransition r = new RotateTransition();
     private final ArrayList<Rectangle> rhombusArr = new ArrayList<>();
     Rhombus(double lenX, double lenY){
         r1 = new Rectangle();
@@ -54,6 +60,10 @@ public class Rhombus extends Obstacles{
         rhombusArr.add(r2);
         rhombusArr.add(r3);
         rhombusArr.add(r4);
+        g.getChildren().add(r1);
+        g.getChildren().add(r2);
+        g.getChildren().add(r3);
+        g.getChildren().add(r4);
     }
 
     public ArrayList<Rectangle> getRhombus(){
@@ -62,7 +72,12 @@ public class Rhombus extends Obstacles{
 
     @Override
     public void move() {
-
+        this.r.setNode(this.g);
+//        r.setAxis(Rotate.);
+        r.setByAngle(360);
+        r.setCycleCount(100);
+        r.setDuration(Duration.millis(700));
+        r.play();
     }
 
     @Override
@@ -78,7 +93,7 @@ public class Rhombus extends Obstacles{
     @Override
     public void moveDown(double temp) {
         for (Rectangle rectangle : rhombusArr) {
-            rectangle.setY(rectangle.getY() - temp/10);
+            rectangle.setY(rectangle.getY() - temp);
         }
     }
 }

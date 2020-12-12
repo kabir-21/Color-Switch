@@ -11,6 +11,7 @@ public class Ball{
     private Color c;
 
     public Ball(int radius, Color c){
+        Main.currentColor = c;
         this.c = c;
         this.ball = new Circle(radius, this.c);
         double positionX = 205;
@@ -24,7 +25,7 @@ public class Ball{
     }
 
     public void gravity() {
-        this.getBall().setCenterY(this.getBall().getCenterY() + 2.5);
+        this.getBall().setCenterY(this.getBall().getCenterY() + 1.5);
 
     }
 

@@ -73,7 +73,7 @@ public class Cross extends Obstacles{
     @Override
     public void moveDown(double temp) {
         for (Rectangle rectangle : cross) {
-            rectangle.setY(rectangle.getY() - temp/10);
+            rectangle.setY(rectangle.getY() - temp);
         }
     }
 }
