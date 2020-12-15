@@ -24,7 +24,7 @@ public class Rhombus extends Obstacles{
     private final ArrayList<Rectangle> rhombusArr = new ArrayList<>();
     Rhombus(double lenX, double lenY){
         r1 = new Rectangle();
-        r1.setHeight(17);
+        r1.setHeight(12);
         r1.setWidth(200);
         r1.setY(lenY);
         r1.setX(lenX);
@@ -33,7 +33,7 @@ public class Rhombus extends Obstacles{
         r1.setArcHeight(15);
 
         r2 = new Rectangle();
-        r2.setHeight(17);
+        r2.setHeight(12);
         r2.setWidth(200);
         r2.setY(lenY+173);
         r2.setX(lenX-100);
@@ -43,7 +43,7 @@ public class Rhombus extends Obstacles{
 
         r3 = new Rectangle();
         r3.setHeight(200);
-        r3.setWidth(17);
+        r3.setWidth(12);
         r3.setY(lenY-5);
         r3.setX(lenX-55);
         r3.setFill(Color.YELLOW);
@@ -52,7 +52,7 @@ public class Rhombus extends Obstacles{
 
         r4 = new Rectangle();
         r4.setHeight(200);
-        r4.setWidth(17);
+        r4.setWidth(12);
         r4.setY(lenY-5);
         r4.setX(lenX+135);
         r4.setFill(Color.VIOLET);
@@ -61,8 +61,8 @@ public class Rhombus extends Obstacles{
         r3.setRotate(30);
         r4.setRotate(30);
 
-        starView.setX(((2*lenX)+100)/2);
-        starView.setY((2*lenY+173)/2);
+        starView.setX(210);
+        starView.setY(((2*lenY)+173)/2);
         starView.setPreserveRatio(true);
         starView.setFitHeight(20);
 
@@ -106,6 +106,7 @@ public class Rhombus extends Obstacles{
         for (Rectangle rectangle : rhombusArr) {
             rectangle.setY(rectangle.getY() - temp);
         }
+        this.getStarView().setY(this.getStarView().getY()-temp);
     }
     public ImageView getStarView(){
         return starView;

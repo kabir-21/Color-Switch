@@ -1,40 +1,42 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 
-public class Line extends Obstacles{
+public class LineObstacle extends Obstacles{
     private final Rectangle rectRed;
     private final Rectangle rectViolet;
     private final Rectangle rectBlue;
     private final Rectangle rectYellow;
+    private final ImageView cSwitch;
     private final ArrayList<Rectangle> line = new ArrayList<>();
 
-    Line(double lenY){
+    LineObstacle(double lenY){
         rectRed = new Rectangle();
-        rectRed.setHeight(17);
+        rectRed.setHeight(12);
         rectRed.setWidth(150);
         rectRed.setY(lenY);
         rectRed.setFill(Color.RED);
 
         rectViolet = new Rectangle();
-        rectViolet.setHeight(17);
+        rectViolet.setHeight(12);
         rectViolet.setWidth(150);
         rectViolet.setY(lenY);
         rectViolet.setX(150);
         rectViolet.setFill(Color.VIOLET);
 
         rectBlue = new Rectangle();
-        rectBlue.setHeight(17);
+        rectBlue.setHeight(12);
         rectBlue.setWidth(150);
         rectBlue.setY(lenY);
         rectBlue.setX(300);
         rectBlue.setFill(Color.BLUE);
 
         rectYellow = new Rectangle();
-        rectYellow.setHeight(17);
+        rectYellow.setHeight(12);
         rectYellow.setWidth(150);
         rectYellow.setY(20);
         rectYellow.setX(450);
@@ -43,6 +45,11 @@ public class Line extends Obstacles{
         line.add(rectViolet);
         line.add(rectBlue);
         line.add(rectYellow);
+        cSwitch = new ImageView(Main.colorSwitch);
+        cSwitch.setX(210);
+        cSwitch.setY(lenY+40);
+        cSwitch.setPreserveRatio(true);
+        cSwitch.setFitHeight(20);
     }
     public ArrayList<Rectangle> getLine(){
         return line;
@@ -79,6 +86,15 @@ public class Line extends Obstacles{
         for (Rectangle rectangle : line) {
             rectangle.setY(rectangle.getY() - temp);
         }
+        this.getSwitchView().setY(this.getSwitchView().getY()-temp);
+    }
+
+    public ImageView getSwitchView(){
+        return this.cSwitch;
+    }
+
+    public void removeSwitch(){
+        this.cSwitch.setImage(null);
     }
 
 }

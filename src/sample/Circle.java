@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -12,6 +14,9 @@ public class Circle extends Obstacles {
     private final Arc arc2;
     private final Arc arc3;
     private final Arc arc4;
+    String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+    Image star = new Image(starUrl);
+    private ImageView starView = new ImageView(star);
     private final ArrayList<Arc> circle = new ArrayList<>();
     public Circle(float x, float y, float rx, float ry, float startAngle, float length, int width){
         arc1 = new Arc();
@@ -62,6 +67,11 @@ public class Circle extends Obstacles {
         arc4.setStroke(Color.RED);
         arc4.setStrokeWidth(width);
 
+        starView.setX(210);
+        starView.setY(y);
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
+
         circle.add(arc1);
         circle.add(arc2);
         circle.add(arc3);
@@ -71,7 +81,7 @@ public class Circle extends Obstacles {
     @Override
     public void move() {
         this.arc1.setStartAngle(this.arc1.getStartAngle()+2);
-        this.arc2.setStartAngle(this.arc2.getStartAngle()+2);
+        this.arc2.setStartAngle(this.arc2.getStartAngle()+2);;
         this.arc3.setStartAngle(this.arc3.getStartAngle()+2);
         this.arc4.setStartAngle(this.arc4.getStartAngle()+2);
     }
@@ -91,9 +101,17 @@ public class Circle extends Obstacles {
         for(Arc arc: circle){
             arc.setCenterY(arc.getCenterY()-temp);
         }
+        this.getStarView().setY(this.getStarView().getY()-temp);
     }
-
     public ArrayList<Arc> getCircle(){
         return circle;
+    }
+
+    public ImageView getStarView(){
+        return starView;
+    }
+
+    public void removeStar(){
+        this.starView.setImage(null);
     }
 }

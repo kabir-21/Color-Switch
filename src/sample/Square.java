@@ -14,7 +14,7 @@ public class Square extends Obstacles{
 
     public Square() {
         red = new Rectangle();
-        red.setHeight(17);
+        red.setHeight(12);
         red.setWidth(200);
         red.setX(120);
         red.setY(-800);
@@ -22,20 +22,20 @@ public class Square extends Obstacles{
 
         violet = new Rectangle();
         violet.setHeight(200);
-        violet.setWidth(17);
+        violet.setWidth(12);
         violet.setX(120);
         violet.setY(-800);
         violet.setFill(Color.VIOLET);
 
         blue = new Rectangle();
         blue.setHeight(200);
-        blue.setWidth(17);
+        blue.setWidth(12);
         blue.setX(320);
         blue.setY(-800);
         blue.setFill(Color.BLUE);
 
         yellow = new Rectangle();
-        yellow.setHeight(17);
+        yellow.setHeight(12);
         yellow.setWidth(217);
         yellow.setX(120);
         yellow.setY(-600);

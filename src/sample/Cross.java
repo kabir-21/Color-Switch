@@ -17,7 +17,7 @@ public class Cross extends Obstacles{
 
     Cross(double lenX, double lenY, Color c1, Color c2){
         cross1 = new Rectangle();
-        cross1.setHeight(17);
+        cross1.setHeight(12);
         cross1.setWidth(150);
         cross1.setY(lenY);
         cross1.setX(lenX);
@@ -27,7 +27,7 @@ public class Cross extends Obstacles{
         cross1.setRotate(90);
 
         cross2 = new Rectangle();
-        cross2.setHeight(17);
+        cross2.setHeight(12);
         cross2.setWidth(150);
         cross2.setY(lenY);
         cross2.setX(lenX);
@@ -76,4 +76,5 @@ public class Cross extends Obstacles{
             rectangle.setY(rectangle.getY() - temp);
         }
     }
+
 }
