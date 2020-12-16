@@ -8,7 +8,7 @@ import javafx.scene.shape.ArcType;
 
 import java.util.ArrayList;
 
-public class ConcurrentCircle extends Obstacles{
+public class ConcentricCircle extends Obstacles{
     private final Arc arc1;
     private final Arc arc2;
     private final Arc arc3;
@@ -23,7 +23,7 @@ public class ConcurrentCircle extends Obstacles{
     private final ArrayList<Arc> bigCircle = new ArrayList<>();
     private final ArrayList<Arc> smallCircle = new ArrayList<>();
 
-    public ConcurrentCircle(float x, float y, float rx, float ry, float startAngle, float length, int width){
+    public ConcentricCircle(float x, float y, float rx, float ry, float startAngle, float length, int width){
         bigArc1 = new Arc();
         bigArc1.setCenterX(x);
         bigArc1.setCenterY(y);
