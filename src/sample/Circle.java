@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Shape;
 
 import javax.lang.model.type.NullType;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class Circle extends Obstacles {
     @Override
     public void move() {
         this.arc1.setStartAngle(this.arc1.getStartAngle()+2);
-        this.arc2.setStartAngle(this.arc2.getStartAngle()+2);;
+        this.arc2.setStartAngle(this.arc2.getStartAngle()+2);
         this.arc3.setStartAngle(this.arc3.getStartAngle()+2);
         this.arc4.setStartAngle(this.arc4.getStartAngle()+2);
     }
@@ -93,7 +94,7 @@ public class Circle extends Obstacles {
 
     @Override
     public double getPositionY() {
-        return 0;
+        return this.arc1.getCenterY();
     }
 
     @Override
@@ -109,6 +110,11 @@ public class Circle extends Obstacles {
 
     public ImageView getStarView(){
         return starView;
+    }
+
+    @Override
+    public Shape getShape() {
+        return this.arc1;
     }
 
     public void removeStar(){

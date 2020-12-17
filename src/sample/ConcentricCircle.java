@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 
@@ -157,7 +158,7 @@ public class ConcentricCircle extends Obstacles{
 
     @Override
     public double getPositionY() {
-        return 0;
+        return this.arc1.getCenterY();
     }
 
     @Override
@@ -180,6 +181,11 @@ public class ConcentricCircle extends Obstacles{
 
     public ImageView getStarView(){
         return starView;
+    }
+
+    @Override
+    public Shape getShape() {
+        return this.arc1;
     }
 
     public void removeStar(){

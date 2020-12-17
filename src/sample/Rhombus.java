@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -36,58 +37,28 @@ public class Rhombus extends Obstacles{
         r1.setStrokeWidth(12);
         r1.setStroke(Color.RED);
         r1.setStrokeLineCap(StrokeLineCap.ROUND);
-//        r1.setHeight(12);
-//        r1.setWidth(200);
-//        r1.setY(lenY);
-//        r1.setX(lenX);
-//        r1.setFill(Color.RED);
-//        r1.setArcWidth(15);
-//        r1.setArcHeight(15);
 
         r2 = new Line(lenX, lenY,lenX-55, lenY+200);
         r2.setStrokeWidth(12);
         r2.setStroke(Color.BLUE);
         r2.setStrokeLineCap(StrokeLineCap.ROUND);
-//        r2.setHeight(12);
-//        r2.setWidth(200);
-//        r2.setY(lenY+173);
-//        r2.setX(lenX-100);
-//        r2.setFill(Color.BLUE);
-//        r2.setArcWidth(15);
-//        r2.setArcHeight(15);
 
         r3 = new Line(lenX+200,lenY,lenX+145, lenY+200);
         r3.setStrokeWidth(12);
         r3.setStroke(Color.YELLOW);
         r3.setStrokeLineCap(StrokeLineCap.ROUND);
-//        r3.setHeight(200);
-//        r3.setWidth(12);
-//        r3.setY(lenY-5);
-//        r3.setX(lenX-55);
-//        r3.setFill(Color.YELLOW);
-//        r3.setArcWidth(15);
-//        r3.setArcHeight(15);
 
         r4 = new Line(lenX-55, lenY+200,lenX+145,lenY+200);
         r4.setStrokeWidth(12);
         r4.setStroke(Color.VIOLET);
         r4.setStrokeLineCap(StrokeLineCap.ROUND);
-//        r4.setHeight(200);
-//        r4.setWidth(12);
-//        r4.setY(lenY-5);
-//        r4.setX(lenX+135);
-//        r4.setFill(Color.VIOLET);
-//        r4.setArcWidth(15);
-//        r4.setArcHeight(15);
-//        r3.setRotate(30);
-//        r4.setRotate(30);
 
         pivotX = lenX+72.5;
         pivotY = lenY+96.14;
         rotate.setPivotX(this.pivotX);
         rotate.setPivotY(this.pivotY);
-        starView.setX(lenX+72.5);
-        starView.setY(lenY+96.14);
+        starView.setX(pivotX);
+        starView.setY(pivotY);
         starView.setPreserveRatio(true);
         starView.setFitHeight(20);
         r1.getTransforms().add(rotate);
@@ -102,10 +73,6 @@ public class Rhombus extends Obstacles{
         rhombusArr.add(r2);
         rhombusArr.add(r3);
         rhombusArr.add(r4);
-//        g.getChildren().add(r1);
-//        g.getChildren().add(r2);
-//        g.getChildren().add(r3);
-//        g.getChildren().add(r4);
     }
 
     public ArrayList<Line> getRhombus(){
@@ -124,7 +91,7 @@ public class Rhombus extends Obstacles{
 
     @Override
     public double getPositionY() {
-        return 0;
+        return this.pivotY;
     }
 
     @Override
@@ -138,6 +105,11 @@ public class Rhombus extends Obstacles{
     }
     public ImageView getStarView(){
         return starView;
+    }
+
+    @Override
+    public Shape getShape() {
+        return this.r1;
     }
 
     public void removeStar(){

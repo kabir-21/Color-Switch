@@ -1,9 +1,12 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+
 import java.util.ArrayList;
 
 public class LineObstacle extends Obstacles{
@@ -12,6 +15,9 @@ public class LineObstacle extends Obstacles{
     private final Rectangle rectBlue;
     private final Rectangle rectYellow;
     private final ImageView cSwitch;
+    String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+    Image star = new Image(starUrl);
+    private ImageView starView = new ImageView(star);
     private final ArrayList<Rectangle> line = new ArrayList<>();
 
     LineObstacle(double lenY){
@@ -35,10 +41,15 @@ public class LineObstacle extends Obstacles{
         rectBlue.setX(300);
         rectBlue.setFill(Color.BLUE);
 
+        starView.setX(210);
+        starView.setY(lenY-30);
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
+
         rectYellow = new Rectangle();
         rectYellow.setHeight(12);
         rectYellow.setWidth(150);
-        rectYellow.setY(20);
+        rectYellow.setY(lenY);
         rectYellow.setX(450);
         rectYellow.setFill(Color.YELLOW);
         line.add(rectRed);
@@ -78,7 +89,7 @@ public class LineObstacle extends Obstacles{
 
     @Override
     public double getPositionY() {
-        return rectBlue.getY();
+        return rectBlue.getY()-25;
     }
 
     @Override
@@ -86,7 +97,9 @@ public class LineObstacle extends Obstacles{
         for (Rectangle rectangle : line) {
             rectangle.setY(rectangle.getY() - temp);
         }
-        this.getSwitchView().setY(this.getSwitchView().getY()-temp);
+//        this.getSwitchView().setY(this.getSwitchView().getY()-temp);
+        this.getStarView().setY(this.getStarView().getY()-temp);
+
     }
 
     public ImageView getSwitchView(){
@@ -96,5 +109,18 @@ public class LineObstacle extends Obstacles{
     public void removeSwitch(){
         this.cSwitch.setImage(null);
     }
+    public ImageView getStarView(){
+        return starView;
+    }
+
+    @Override
+    public Shape getShape() {
+        return this.rectBlue;
+    }
+
+    public void removeStar(){
+        this.starView.setImage(null);
+    }
+
 
 }

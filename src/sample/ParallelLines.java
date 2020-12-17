@@ -1,7 +1,9 @@
 package sample;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 
@@ -134,7 +136,7 @@ public class ParallelLines extends Obstacles{
 
     @Override
     public double getPositionY() {
-        return 0;
+        return this.line2[0].getY()+25;
     }
 
     @Override
@@ -144,6 +146,16 @@ public class ParallelLines extends Obstacles{
                 rectangle.setY(rectangle.getY() - temp);
             }
         }
+    }
+
+    @Override
+    public ImageView getStarView() {
+        return null;
+    }
+
+    @Override
+    public Shape getShape() {
+        return this.line1[0];
     }
 
     public Rectangle[] getParallelLineI(int i){

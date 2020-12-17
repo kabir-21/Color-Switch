@@ -6,9 +6,12 @@ import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.WritableDoubleValue;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -23,6 +26,9 @@ public class Square extends Obstacles{
     private final Line yellow;
     private double pivotX;
     private double pivotY;
+    String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+    Image star = new Image(starUrl);
+    private ImageView starView = new ImageView(star);
     private final ArrayList<Line> square = new ArrayList<>();
     private Rotate r1 = new Rotate();
     private Timeline timeline;
@@ -33,36 +39,17 @@ public class Square extends Obstacles{
         red.setStrokeWidth(12);
         red.setStrokeLineCap(StrokeLineCap.ROUND);
 
-//        red = new Rectangle();
-//        red.setHeight(12);
-//        red.setWidth(200);
-//        red.setX(lenX);
-//        red.setY(lenY);
-//        red.setFill(Color.RED);
         yellow = new Line(lenX,lenY,lenX, lenY+200);
-//        violet = new Rectangle();
-//        violet.setHeight(200);
-//        violet.setWidth(12);
-//        violet.setX(lenX);
-//        violet.setY(lenY);
         yellow.setStroke(Color.YELLOW);
         yellow.setStrokeWidth(12);
         yellow.setStrokeLineCap(StrokeLineCap.ROUND);
 
         blue = new Line(lenX+200, lenY, lenX+200,lenY+200);
-//        blue.setHeight(200);
-//        blue.setWidth(12);
-//        blue.setX(lenX+200);
-//        blue.setY(lenY);
         blue.setStroke(Color.BLUE);
         blue.setStrokeWidth(12);
         blue.setStrokeLineCap(StrokeLineCap.ROUND);
 
         violet = new Line(lenX,lenY+200,lenX+200, lenY+200);
-//        yellow.setHeight(12);
-//        yellow.setWidth(217);
-//        yellow.setX(120);
-//        yellow.setY(lenY+200);
         violet.setStroke(Color.VIOLET);
         violet.setStrokeWidth(12);
         violet.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -71,6 +58,11 @@ public class Square extends Obstacles{
         pivotY = lenY+100;
         r1.setPivotX(this.pivotX);
         r1.setPivotY(this.pivotY);
+        starView.setX(pivotY);
+        starView.setY(pivotY);
+
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
         red.getTransforms().add(r1);
         yellow.getTransforms().add(r1);
         violet.getTransforms().add(r1);
@@ -87,13 +79,7 @@ public class Square extends Obstacles{
 
     @Override
     public void move() {
-//        r1.setPivotX(this.getPivotX());
-//        r1.setAxis();
-//        r1.setPivotY(this.getPivotY());
-
         timeline.play();
-//        Timeline tt = new Timeline(new KeyFrame(Duration.ZERO), new KeyValue(r1.angleProperty(),0), new KeyFrame(Duration.seconds(1), new KeyValue(r1.angleProperty())));
-//        r1.setAngle(180);
     }
 
     @Override
@@ -103,7 +89,7 @@ public class Square extends Obstacles{
 
     @Override
     public double getPositionY() {
-        return 0;
+        return this.pivotY;
     }
 
     @Override
@@ -112,6 +98,7 @@ public class Square extends Obstacles{
             line.setLayoutY(line.getLayoutY() - temp);
         }
         pivotY-=temp;
+        this.getStarView().setY(this.getStarView().getY()-temp);
     }
 
     public double getPivotX() {
@@ -129,4 +116,17 @@ public class Square extends Obstacles{
     public void setPivotY(double pivotY) {
         this.pivotY = pivotY;
     }
+    public ImageView getStarView(){
+        return starView;
+    }
+
+    @Override
+    public Shape getShape() {
+        return this.blue;
+    }
+
+    public void removeStar(){
+        this.starView.setImage(null);
+    }
+
 }

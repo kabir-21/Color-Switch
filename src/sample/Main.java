@@ -17,9 +17,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -31,26 +33,42 @@ public class Main extends Application{
     protected static Ball b;
     protected static int HEIGHT = 780;
     protected static int WIDTH = 420;
-    protected static double MID = 300;
+    protected static double MID = -250;
     protected static AnimationTimer timer;
     protected static AnimationTimer timer2;
     protected static Stage pStage;
     protected static int points = 0;
     protected final double acc = 0.25;
     protected double position, velocity = 0;
+    protected Group game = new Group();
     protected static Color currentColor;
-    protected static Color colors[] = {Color.RED, Color.VIOLET, Color.BLUE, Color.YELLOW};
+    protected static Color[] colors = {Color.RED, Color.VIOLET, Color.BLUE, Color.YELLOW};
     protected static ArrayList<Obstacles> allObstacles = new ArrayList<>();
+    protected static ArrayList<ImageView> stars = new ArrayList<>();
     protected static String logoUrl = "https://www.dafont.com/forum/attach/orig/8/8/885774.png?1";
     protected static String colorUrl = "https://i.pinimg.com/originals/06/5f/43/065f43d6e9f4f5aa89d46f1a77804bfa.png";
     public static Image colorSwitch = new Image(colorUrl);
     protected static Image image = new Image(logoUrl);
     protected final Scene[] s = new Scene[10];
     protected final Player[] user = new Player[1];
-    protected final int random[] = new int[8];
-    protected int obstacleNumber;
-    protected double lastY = 0;
-    protected Pane p = new Pane();
+    protected final int[] random = new int[7];
+    protected int obstacleNumber = -1;
+    public static int currentObs = 0;
+    public ArrayList<Arc> circleArcs;
+    public ArrayList<Arc> concCircs;
+    public ArrayList<Rectangle> lineRects;
+    public ArrayList<Rectangle[]> par1;
+    public ArrayList<Rectangle[]> par2;
+    public ArrayList<Rectangle[]> par3;
+    public ArrayList<Line> rhombusLines;
+    public ArrayList<Line> squareLines;
+    protected double lastY = 300;
+    public Arc aaa = new Arc();
+    String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+    Image star = new Image(starUrl);
+    private ImageView starView = new ImageView(star);
+    private ImageView switchView = new ImageView(colorSwitch);
+    public ArrayList<Pane> p = new ArrayList<>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -74,7 +92,30 @@ public class Main extends Application{
         devText.setLayoutX(50); devText.setLayoutY(700);
         devKabir.setLayoutX(50); devKabir.setLayoutY(720);
         devSejal.setLayoutX(50); devSejal.setLayoutY(740);
-//        ImageView orb = new ImageView(new Image(new FileInputStream("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/a706c6f4-c546-46c4-9b8f-6dc4b7aae1a1/d20nc45-a4bd3c4f-5643-4d95-a96f-8232efe7f84b.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvYTcwNmM2ZjQtYzU0Ni00NmM0LTliOGYtNmRjNGI3YWFlMWExXC9kMjBuYzQ1LWE0YmQzYzRmLTU2NDMtNGQ5NS1hOTZmLTgyMzJlZmU3Zjg0Yi5wbmcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.lA1_6584IIca2NRXVqOKfs_ZW8jarNy3OnAvWngKGpU")));
+        Circle menu_c=new Circle(210,550,50,50,0,90,12);
+        Circle menu_c1=new Circle(210,550,100,100,0,90,12);
+        Circle menu_c2=new Circle(210,550,75,75,0,90,12);
+        Circle menu_c3=new Circle(210,550,125,125,0,90,12);
+        Rectangle menu_r1=new Rectangle();
+        menu_r1.setX(190);
+        menu_r1.setY(546);
+        menu_r1.setHeight(8);
+        menu_r1.setWidth(40);
+        menu_r1.setFill(Color.RED);
+        Rectangle menu_r2=new Rectangle();
+        menu_r2.setX(206);
+        menu_r2.setY(530);
+        menu_r2.setHeight(40);
+        menu_r2.setWidth(8);
+        menu_r2.setFill(Color.YELLOW);
+        menu_r1.setArcWidth(5);
+        menu_r1.setArcHeight(5);
+        menu_r2.setArcWidth(5);
+        menu_r2.setArcHeight(5);
+        Rotate menu_cross=new Rotate();
+        menu_cross.setAngle(2);
+        menu_cross.setPivotX(210);
+        menu_cross.setPivotY(550);
         ImageView imageView = new ImageView(image);
         imageView.setX(8);
         imageView.setY(100);
@@ -89,6 +130,11 @@ public class Main extends Application{
         gName.getChildren().add(devText);
         gName.getChildren().add(devKabir);
         gName.getChildren().add(devSejal);
+        gName.getChildren().addAll(menu_c.getCircle());
+        gName.getChildren().addAll(menu_c1.getCircle());
+        gName.getChildren().addAll(menu_c2.getCircle());
+        gName.getChildren().addAll(menu_c3.getCircle());
+        gName.getChildren().addAll(menu_r1,menu_r2);
         enterName.setLayoutX(128);
         enterName.setLayoutY(380);
         enterName.setOnAction(actionEvent -> insideStart(primaryStage, enterName.getText(), imageView));
@@ -97,6 +143,18 @@ public class Main extends Application{
         s[0].getStylesheets().add("https://fonts.googleapis.com/css2?family=Concert+One");
         gName.setStyle("-fx-font-family: 'Concert One', cursive; -fx-font-size: 15");
         primaryStage.setScene(s[0]);
+        AnimationTimer home_screen=new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                menu_c.move();
+                menu_c1.move();
+                menu_c2.move();
+                menu_c3.move();
+                menu_r1.getTransforms().add(menu_cross);
+                menu_r2.getTransforms().add(menu_cross);
+            }
+        };
+        home_screen.start();
     }
 
     public void insideStart(Stage primaryStage, String name, ImageView imageView){
@@ -148,6 +206,8 @@ public class Main extends Application{
         Button pauseButton = new Button("| |");
         TextField score = new TextField(""+points);
         score.setStyle("-fx-text-fill: white");
+        score.setOpacity(20);
+        
         score.setBackground(Background.EMPTY);
         score.setLayoutX(0);
         score.setLayoutY(750);
@@ -164,9 +224,29 @@ public class Main extends Application{
             timer2.stop();
         });
         b = new Ball(10, colors[new Random().nextInt(colors.length)]);
-        Pane ballPane = new Pane(b.getBall());
-        Group game = new Group(ballPane);
+        p.add(new Pane(b.getBall()));
+        game.getChildren().add(p.get(0));
+        generateObstacles();
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
+        starView.setX(210);
+        starView.setY(allObstacles.get(currentObs).getPositionY());
+        starView.setPreserveRatio(true);
+        starView.setFitHeight(20);
+        switchView.setPreserveRatio(true);
+        switchView.setFitHeight(20);
+        switchView.setX(210);
+        switchView.setY((allObstacles.get(currentObs).getPositionY()+allObstacles.get(currentObs+1).getPositionY())/2);
+        game.getChildren().add(starView);
+        game.getChildren().add(switchView);
+//        ParallelLines cc = new ParallelLines(500);
+////        Circle cc = new Circle(210, 500, 100, 100, 0, 90, 12);
+//        allObstacles.add(cc);
+//        game.getChildren().addAll(cc.getParallelLineI(0));
+//        game.getChildren().addAll(cc.getParallelLineI(1));
+//        game.getChildren().addAll(cc.getParallelLineI(2));
 
+        //        game.getChildren().addAll(cc.getBigCircle());
 //        while(true){
 //            int temp;
 //            do {
@@ -245,91 +325,116 @@ public class Main extends Application{
 //        ImageView pauseImageView = new ImageView(pauseImage);
 //        pauseImageView.setFitHeight(30);
 //        pauseImageView.setPreserveRatio(true);
-
-        Pane arcPane = new Pane();
-        Circle circle = new Circle(210,-1200, 100, 100, 0,90,12);
-        Square ss = new Square(110,-800);
-        allObstacles.add(ss);
-        ConcentricCircle concentricCircle = new ConcentricCircle(210,-2500,200,200,0,90,12);
-        allObstacles.add(concentricCircle);
-        Pane conc = new Pane();
-        allObstacles.add(circle);
-        ParallelLines parallelLines = new ParallelLines(-1500);
-        allObstacles.add(parallelLines);
-        Pane parallelPane = new Pane();
-//        VerticalLines verticalLines = new VerticalLines(-2000);
-//        allObstacles.add(verticalLines);
-        Pane verticalPane = new Pane();
-        Pane p2 = new Pane();
-        p2.getChildren().addAll(ss.getSquare());
-        Pane p3 = new Pane();
-        Pane p4 = new Pane();
-        Pane p5 = new Pane();
-        Pane squarePane = new Pane();
-
-        LineObstacle lineObstacle1 = new LineObstacle(20);
-        allObstacles.add(lineObstacle1);
-        Cross cross = new Cross(90,300, currentColor, pickRandomColor());
-        allObstacles.add(cross);
-        Rhombus rhombus = new Rhombus(150,-350);
-        allObstacles.add(rhombus);
-//        String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
-//        Image star = new Image(starUrl);
-//        ImageView starView = new ImageView(star);
-//        starView.setX(205);
-//        starView.setY(-320);
-//        starView.setPreserveRatio(true);
-//        starView.setFitHeight(20);
-//        Square square = new Square();
-//        allObstacles.add(square);
-//        ArrayList<Rectangle> sqaureArr = square.getSquare();
-        ArrayList<Rectangle> crossArr = cross.getCross();
-        ArrayList<Rectangle> line1Rects = lineObstacle1.getLine();
-        arcPane.getChildren().addAll(circle.getCircle());
-        conc.getChildren().addAll(concentricCircle.getBigCircle());
-        conc.getChildren().addAll(concentricCircle.getSmallCircle());
-        parallelPane.getChildren().addAll(parallelLines.getParallelLineI(0));
-        parallelPane.getChildren().addAll(parallelLines.getParallelLineI(1));
-        parallelPane.getChildren().addAll(parallelLines.getParallelLineI(2));
-//        verticalPane.getChildren().addAll(verticalLines.getVerticalLines());
-        p2.getChildren().addAll(lineObstacle1.getLine());
-        p2.getChildren().add(lineObstacle1.getSwitchView());
-        p3.getChildren().addAll(cross.getCross());
-        p4.getChildren().addAll(rhombus.getRhombus());
+//        LineObstacle l1 = new LineObstacle(500);
+//        allObstacles.add(l1);
+//        game.getChildren().addAll(l1.getLine());
+//        System.out.println("now doing");
+//        generateObstacles();
+//        System.out.println("done generating");
+//        System.out.println("size of all obs is: "+allObstacles.size());
+//        Pane arcPane = new Pane();
+//        Circle circle = new Circle(210,-1200, 100, 100, 0,90,12);
+//        Square ss = new Square(110,-800);
+//        allObstacles.add(ss);
+//        ConcentricCircle concentricCircle = new ConcentricCircle(210,-2500,200,200,0,90,12);
+//        allObstacles.add(concentricCircle);
+//        Pane conc = new Pane();
+//        allObstacles.add(circle);
+//        ParallelLines parallelLines = new ParallelLines(-1500);
+//        allObstacles.add(parallelLines);
+//        Pane parallelPane = new Pane();
+////        VerticalLines verticalLines = new VerticalLines(-2000);
+////        allObstacles.add(verticalLines);
+//        Pane verticalPane = new Pane();
+//        Pane p2 = new Pane();
+//        p2.getChildren().addAll(ss.getSquare());
+//        Pane p3 = new Pane();
+//        Pane p4 = new Pane();
+//        Pane p5 = new Pane();
+//        Pane squarePane = new Pane();
+//
+//        LineObstacle lineObstacle1 = new LineObstacle(20);
+//        allObstacles.add(lineObstacle1);
+//        Cross cross = new Cross(90,300, currentColor, pickRandomColor());
+//        allObstacles.add(cross);
+//        Rhombus rhombus = new Rhombus(150,-350);
+//        allObstacles.add(rhombus);
+////        String starUrl = "https://freepngimg.com/thumb/star/36741-4-3d-gold-star-transparent-background.png";
+////        Image star = new Image(starUrl);
+////        ImageView starView = new ImageView(star);
+////        starView.setX(205);
+////        starView.setY(-320);
+////        starView.setPreserveRatio(true);
+////        starView.setFitHeight(20);
+////        Square square = new Square();
+////        allObstacles.add(square);
+////        ArrayList<Rectangle> sqaureArr = square.getSquare();
+//        ArrayList<Rectangle> crossArr = cross.getCross();
+//        ArrayList<Rectangle> line1Rects = lineObstacle1.getLine();
+//        arcPane.getChildren().addAll(circle.getCircle());
+//        conc.getChildren().addAll(concentricCircle.getBigCircle());
+//        conc.getChildren().addAll(concentricCircle.getSmallCircle());
+//        parallelPane.getChildren().addAll(parallelLines.getParallelLineI(0));
+//        parallelPane.getChildren().addAll(parallelLines.getParallelLineI(1));
+//        parallelPane.getChildren().addAll(parallelLines.getParallelLineI(2));
+////        verticalPane.getChildren().addAll(verticalLines.getVerticalLines());
+//        p2.getChildren().addAll(lineObstacle1.getLine());
+//        p2.getChildren().add(lineObstacle1.getSwitchView());
+//        p3.getChildren().addAll(cross.getCross());
+//        p4.getChildren().addAll(rhombus.getRhombus());
 //        p5.getChildren().addAll(square.getSquare());
 //        p.getChildren().add(b.getBall());
         position = b.getBall().getCenterY();
         timer = new AnimationTimer() {
+
+            int counter=0;
             @Override
             public void handle(long l) {
                 velocity = -4;
-                if(rhombus.getStarView().getBoundsInParent().intersects(b.getBall().getBoundsInParent())){
-                    if(rhombus.getStarView().getImage() != null)
-                        score.setText(""+(++points));
-                    rhombus.removeStar();
-//                    System.out.println(points);
+                if(b.getBall().getBoundsInParent().intersects(starView.getBoundsInParent())){
+                    currentObs++;
+                    starView.setY(allObstacles.get(currentObs).getPositionY());
+                    score.setText(""+(++points));
                 }
-                if(circle.getStarView().getBoundsInParent().intersects(b.getBall().getBoundsInParent())){
-                    if(circle.getStarView().getImage() != null)
-                        score.setText(""+(++points));
-                    circle.removeStar();
-//                    System.out.println(points);
+                if(b.getBall().getBoundsInParent().intersects(switchView.getBoundsInParent())){
+                    b.getBall().setFill(pickRandomColor());
+                    currentColor = (Color)b.getBall().getFill();
+                    switchView.setY((allObstacles.get(currentObs).getPositionY()+allObstacles.get(currentObs+1).getPositionY())/2);
                 }
-                if(b.getBall().getBoundsInParent().intersects(lineObstacle1.getSwitchView().getBoundsInParent())){
-                    if(lineObstacle1.getSwitchView().getImage() != null){
-                        b.getBall().setFill(pickRandomColor());
-                        currentColor = (Color) b.getBall().getFill();
-                        lineObstacle1.removeSwitch();
-                    }
-                }
-                System.out.println(b.getBall().getCenterY());
-//                b.checkCollision(line1Rects, cross);//, crossArr);
-                double temp = b.getBall().getCenterY()+MID;
-//                System.out.println("temp is: "+ temp);
-                if(temp<0){
+//                for(Obstacles o: allObstacles){
+//                    if(o.getStarView().getBoundsInParent().intersects(b.getBall().getBoundsInParent())){
+//                        if(o.getStarView().getImage() != null)
+//                            score.setText(""+(++points));
+//                    }
+//                }
+//                if(rhombus.getStarView().getBoundsInParent().intersects(b.getBall().getBoundsInParent())){
+//                    if(rhombus.getStarView().getImage() != null)
+//                        score.setText(""+(++points));
+//                    rhombus.removeStar();
+////                    System.out.println(points);
+//                }
+//                if(circle.getStarView().getBoundsInParent().intersects(b.getBall().getBoundsInParent())){
+//                    if(circle.getStarView().getImage() != null)
+//                        score.setText(""+(++points));
+//                    circle.removeStar();
+////                    System.out.println(points);
+//                }
+//                if(b.getBall().getBoundsInParent().intersects(lineObstacle1.getSwitchView().getBoundsInParent())){
+//                    if(lineObstacle1.getSwitchView().getImage() != null){
+//                        b.getBall().setFill(pickRandomColor());
+//                        currentColor = (Color) b.getBall().getFill();
+//                        lineObstacle1.removeSwitch();
+//                    }
+//                }
+                b.checkCollision();
+                if(b.getBall().getCenterY()<MID && counter==0){
+                    counter++;
                     for(Obstacles entry: allObstacles){
-                        entry.moveDown(velocity*1.5);
+                        entry.moveDown(velocity*3);
                     }
+                    starView.setY(starView.getY()-(velocity*3));
+                    switchView.setY(switchView.getY()-(velocity*3));
+//                    generateObstacles();
 //                    red.setLayoutY(red.getLayoutY()-velocity);
 //                    red.setY
 //                    for(Map.Entry<Obstacles,Boolean> entry: allObstacles.entrySet()){
@@ -346,46 +451,52 @@ public class Main extends Application{
 //                    starView.setY(starView.getY()-8);
 //                    parallelLines.moveDown(-8);
                 }
+                else {
+                    counter=0;
+                }
+//                System.out.println(b.getBall().getCenterY());
             }
         };
 
-        EventHandler<Event> eventHandler = new EventHandler<Event>() {
+        EventHandler<Event> eventHandler = new EventHandler<>() {
             @Override
             public void handle(Event event) {
                 if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                    timer2 = new AnimationTimer(){
+                    timer2 = new AnimationTimer() {
                         @Override
                         public void handle(long l) {
-                            velocity+=acc;
-                            position+=velocity;
+                            velocity += acc;
+                            position += velocity;
                             b.getBall().setCenterY(position);
-                            lineObstacle1.move();
-                            cross.move();
-                            rhombus.move();
-                            circle.move();
-                            parallelLines.move();
-//                            verticalLines.move();
-                            concentricCircle.move();
-                            ss.move();
+                            for (Obstacles o : allObstacles) {
+                                o.move();
+                            }
+//                            lineObstacle1.move();
+//                            cross.move();
+//                            rhombus.move();
+//                            circle.move();
+//                            parallelLines.move();
+////                            verticalLines.move();
+//                            concentricCircle.move();
+//                            ss.move();
                         }
                     };
                     timer2.start();
                 }
             }
         };
-        game.getChildren().add(rhombus.getStarView());
-        game.getChildren().add(circle.getStarView());
-//        game.getChildren().add(p);
-        game.getChildren().add(p2);
-        game.getChildren().add(p3);
-        game.getChildren().add(p4);
-        game.getChildren().add(p5);
-        game.getChildren().add(arcPane);
-        game.getChildren().add(conc);
-        game.getChildren().add(parallelPane);
-        game.getChildren().add(verticalPane);
+//        game.getChildren().add(rhombus.getStarView());
+//        game.getChildren().add(circle.getStarView());
+////        game.getChildren().add(p);
+//        game.getChildren().add(p2);
+//        game.getChildren().add(p3);
+//        game.getChildren().add(p4);
+//        game.getChildren().add(p5);
+//        game.getChildren().add(arcPane);
+//        game.getChildren().add(conc);
+//        game.getChildren().add(parallelPane);
+//        game.getChildren().add(verticalPane);
         game.getChildren().add(pauseButton);
-//        game.getChildren().add(starView);
         game.getChildren().add(score);
         s[3] = new Scene(game,420,780, Color.BLACK);
         s[3].setOnMouseClicked(eventHandler);
@@ -466,5 +577,142 @@ public class Main extends Application{
     public static void gameOver() {
         timer.stop();
         timer2.stop();
+    }
+
+    public void generateObstacles(){
+         for(int i=0;i<50;i++){
+            int temp;
+            do {
+                temp = new Random().nextInt(random.length);
+            } while (temp == obstacleNumber);
+
+             //                case 1: {
+             ////                    System.out.println("doing case 1");
+             //                    obstacleNumber = 1;
+             //                    Cross c;
+             //                    if(lastY != 0)
+             //                        c = new Cross(90, lastY - 100, currentColor, pickRandomColor());
+             //                    else
+             //                        c = new Cross(90, lastY+300, currentColor, pickRandomColor());
+             //                    allObstacles.add(c);
+             //                    lastY -= 100;
+             ////                    p.add(new Group());
+             //                    p.getChildren().addAll(c.getCross());
+             //                    break;
+             //                }
+             switch (temp) {
+                 case 0 -> {
+                    System.out.println("doing case 0");
+                     obstacleNumber = 0;
+                     LineObstacle l;
+                     l = new LineObstacle(lastY);
+                     allObstacles.add(l);
+                     p.add(new Pane());
+                     p.get(p.size()-1).getChildren().addAll(l.getLine());
+//                     p.get(p.size()-1).getChildren().add(l.getStarView());
+//                     stars.add(l.getStarView());
+                     game.getChildren().add(p.get(p.size()-1));
+                     lastY -= 300;
+                     System.out.println("lasty of line is: "+ lastY);
+                     break;
+                 }
+                 case 1 -> {
+                    System.out.println("doing case 2");
+                     obstacleNumber = 1;
+                     Circle c;
+                     c = new Circle(210, (float) lastY, 100, 100, 0, 90, 12);
+                     allObstacles.add(c);
+                     p.add(new Pane());
+                     p.get(p.size()-1).getChildren().addAll(c.getCircle());
+//                     p.get(p.size()-1).getChildren().add(c.getStarView());
+//                     stars.add(c.getStarView());
+                     game.getChildren().add(p.get(p.size()-1));
+                     lastY -= 500;
+                     System.out.println("lasty of circle is: "+lastY);
+                     break;
+                 }
+                 case 2 -> {
+                    System.out.println("doing case 3");
+                     obstacleNumber = 2;
+                     ConcentricCircle c;
+                     c = new ConcentricCircle(210, (float) lastY, 200, 200, 0, 90, 12);
+                     allObstacles.add(c);
+                     p.add(new Pane());
+                     p.get(p.size()-1).getChildren().addAll(c.getBigCircle());
+                     p.get(p.size()-1).getChildren().addAll(c.getSmallCircle());
+//                     p.get(p.size()-1).getChildren().add(c.getStarView());
+//                     stars.add(c.getStarView());
+                     game.getChildren().add(p.get(p.size()-1));
+                     lastY -= 800;
+                     System.out.println("lasty of big circle is: "+lastY);
+                     break;
+                 }
+                 case 3 -> {
+                    System.out.println("doing case 4");
+                     obstacleNumber = 3;
+                     ParallelLines pl;
+                     pl = new ParallelLines(lastY);
+                     allObstacles.add(pl);
+                     p.add(new Pane());
+                     p.get(p.size()-1).getChildren().addAll(pl.getParallelLineI(0));
+                     p.get(p.size()-1).getChildren().addAll(pl.getParallelLineI(1));
+                     p.get(p.size()-1).getChildren().addAll(pl.getParallelLineI(2));
+                     game.getChildren().add(p.get(p.size()-1));
+                     lastY -= 800;
+                     System.out.println("lasty of parallel is: "+lastY);
+                     break;
+                 }
+                 case 4 -> {
+                    System.out.println("doing case 5");
+                     obstacleNumber = 4;
+                     Rhombus r;
+                     r = new Rhombus(150, lastY);
+                     allObstacles.add(r);
+                     p.add(new Pane());
+                     p.get(p.size()-1).getChildren().addAll(r.getRhombus());
+//                     p.get(p.size()-1).getChildren().add(r.getStarView());
+//                     stars.add(r.getStarView());
+                     game.getChildren().add(p.get(p.size()-1));
+                     lastY -= 500;
+                     System.out.println("lasty of rhombus is: "+lastY);
+                     break;
+                 }
+                 case 5 -> {
+                    System.out.println("doing case 6");
+                     obstacleNumber = 5;
+                     Square s;
+                     s = new Square(110, lastY);
+                     allObstacles.add(s);
+                     p.add(new Pane());
+                     p.get(p.size()-1).getChildren().addAll(s.getSquare());
+//                     p.get(p.size()-1).getChildren().add(s.getStarView());
+//                     stars.add(s.getStarView());
+                     game.getChildren().add(p.get(p.size()-1));
+                     lastY -= 600;
+                     System.out.println("lasty of sqaure is : "+lastY);
+                     break;
+                 }
+//                 case 6 -> {
+////                    System.out.println("doing case 7");
+//                     obstacleNumber = 6;
+//                     VerticalLines v;
+////                     if (lastY != 0)
+//                         v = new VerticalLines(lastY);
+////                     else
+////                         v = new VerticalLines(lastY + 300);
+//                     allObstacles.add(v);
+//                     p.add(new Group());
+//                     p.get(p.size()-1).getChildren().addAll(v.getVerticalLines());
+//                     game.getChildren().add(p.get(p.size()-1));
+//
+//                     lastY += (p.get(p.size()-1).getBoundsInParent().getMinY()-100);
+//                     System.out.println("lasty is: "+lastY);
+//
+////                    p.add(new Group());
+////                     p.getChildren().addAll(v.getVerticalLines());
+//                     break;
+//                 }
+             }
+        }
     }
 }
