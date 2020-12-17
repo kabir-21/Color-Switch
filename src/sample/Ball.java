@@ -1,7 +1,6 @@
 package sample;
-
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
+import javafx.scene.shape.*;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
@@ -29,57 +28,35 @@ public class Ball{
 
     }
 
-    public void checkCollision() {
+    public void checkCollision(ArrayList<Arc> circleArcs, ArrayList<Rectangle> lineRects, ArrayList<Line> rhombusLines,
+                               Rectangle[] par1, Rectangle[] par2, Rectangle[] par3, ArrayList<Line> squareLines) {
+        for(Rectangle a: lineRects){
+            if(this.getBall().getBoundsInParent().intersects(a.getBoundsInParent())){
+                if(!a.getFill().equals(this.getBall().getFill())){
+                    Main.isAlive = false;
+                }
+            }
+        }
+        for(Rectangle a: par1){
+            if(this.getBall().getBoundsInParent().intersects(a.getBoundsInParent())){
+                if(!a.getFill().equals(this.getBall().getFill())){
+                    Main.isAlive = false;
+                }
+            }
+        }for(Rectangle a: par2){
+            if(this.getBall().getBoundsInParent().intersects(a.getBoundsInParent())){
+                if(!a.getFill().equals(this.getBall().getFill())){
+                    Main.isAlive = false;
+                }
+            }
+        }for(Rectangle a: par3){
+            if(this.getBall().getBoundsInParent().intersects(a.getBoundsInParent())){
+                if(!a.getFill().equals(this.getBall().getFill())){
+                    Main.isAlive = false;
+                }
+            }
+        }
 
-//        if(Main.allObstacles.get(Main.currentObs).getClass().getSimpleName().equals("Circle")){
-//            sample.Circle c = (sample.Circle)Main.allObstacles.get(Main.currentObs);
-//            ArrayList<Arc> arr = c.getCircle();
-//            for(Arc a: arr){
-//                if(a.getBoundsInParent().intersects(this.getBall().getBoundsInParent())){
-//                    System.out.println("arc fill is: "+a.getFill());
-//                    System.out.println("ball fil is: "+this.getBall().getFill());
-//                    if(a.getFill().equals(this.getBall().getFill()))
-//                        Main.gameOver();
-//                }
-//            }
-//        }
-//        if(Main.allObstacles.get(Main.currentObs).getClass().getSimpleName().equals("Circle")){
-//            sample.Circle c = (sample.Circle)Main.allObstacles.get(Main.currentObs);
-//            ArrayList<Arc> arr = c.getCircle();
-//            for(Arc a: arr){
-//                if(a.getBoundsInParent().intersects(this.getBall().getBoundsInParent())){
-//                    if(!a.getFill().equals(this.getBall().getFill()))
-//                        Main.gameOver();
-//                }
-//            }
-//        }
-//        for (Rectangle line1Rect : line1Rects) {
-//            if (line1Rect.getBoundsInParent().intersects(this.getBall().getBoundsInParent())) {
-//                if (!line1Rect.getFill().equals(this.getBall().getFill())) {
-//                    Main.gameOver();
-////                    cross.r1.stop();
-////                    cross.r2.stop();
-////                    Main.timer.stop();
-////                    Main.timer2.stop();
-////                    Main.rect1.stop();
-////                    Main.cross_timer.stop();
-//                }
-//            }
-//        }
-//        ArrayList<Rectangle> crossArr = cross.getCross();
-//        for (Rectangle rectangle : crossArr) {
-//            if (rectangle.getBoundsInParent().intersects(this.getBall().getBoundsInParent())) {
-//                if (!rectangle.getFill().equals(this.getBall().getFill())) {
-//                    Main.gameOver();
-////                    cross.r1.stop();
-////                    cross.r2.stop();
-////                    Main.timer.stop();
-////                    Main.timer2.stop();
-////                    Main.rect1.stop();
-////                    Main.cross_timer.stop();
-//                }
-//            }
-//        }
     }
 }
 

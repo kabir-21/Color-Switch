@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -97,7 +96,6 @@ public class LineObstacle extends Obstacles{
         for (Rectangle rectangle : line) {
             rectangle.setY(rectangle.getY() - temp);
         }
-//        this.getSwitchView().setY(this.getSwitchView().getY()-temp);
         this.getStarView().setY(this.getStarView().getY()-temp);
 
     }

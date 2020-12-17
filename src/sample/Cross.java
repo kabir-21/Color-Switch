@@ -49,20 +49,10 @@ public class Cross extends Obstacles{
         r1.setPivotY(this.pivotY);
         cross1.getTransforms().add(r1);
         cross2.getTransforms().add(r1);
-//        r1.getTransforms().add(r1);
         timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(r1.angleProperty(), 0)),
                 new KeyFrame(Duration.seconds(10), new KeyValue(r1.angleProperty(), 360)));
-//        r1.setAxis(Rotate.Z_AXIS);
-//        r1.setByAngle(360);
-//        r1.setCycleCount(100);
-//        r1.setDuration(Duration.millis(700));
-//        r1.setNode(this.cross1);
-//        r2.setAxis(Rotate.Z_AXIS);
-//        r2.setByAngle(360);
-//        r2.setCycleCount(100);
-//        r2.setDuration(Duration.millis(700));
-//        r2.setNode(this.cross2);
+
         cross.add(cross1); cross.add(cross2);
     }
 
